@@ -23,3 +23,8 @@ jobs:
 
     - name: Test
       run: make ci-test
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v2
+      with:
+        files: ./cover.out
