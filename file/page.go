@@ -80,7 +80,7 @@ func (p *Page) SetString(offset int, val string) (int, error) {
 }
 
 func (p *Page) MaxLength(strlen int) int {
-	return sizeofInt64 + strlen*8
+	return sizeofInt64 + strlen
 }
 
 func (p *Page) contens() []byte {
