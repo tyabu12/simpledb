@@ -13,12 +13,12 @@ import (
 type FileManager struct {
 	mu          sync.Mutex
 	dbDirectory string
-	blockSize   int64
+	blockSize   int
 	isNew       bool
 	openFiles   map[string]*os.File
 }
 
-func NewFileManager(dbDirectory string, blockSize int64) (*FileManager, error) {
+func NewFileManager(dbDirectory string, blockSize int) (*FileManager, error) {
 	isNew := false
 	if !fileExists(dbDirectory) {
 		if err := os.MkdirAll(dbDirectory, 0777); err != nil {
@@ -68,7 +68,7 @@ func (fm *FileManager) Read(blk *BlockId, p *Page) error {
 	if err != nil {
 		return errors.Wrap(err, "cannot read block "+blk.String())
 	}
-	if _, err = f.Seek(blk.Number()*fm.BlockSize(), io.SeekStart); err != nil {
+	if _, err = f.Seek(blk.Number()*int64(fm.BlockSize()), io.SeekStart); err != nil {
 		return errors.Wrap(err, "cannot read block "+blk.String())
 	}
 	if _, err = f.Read(p.contens()); err != nil {
@@ -85,7 +85,7 @@ func (fm *FileManager) Write(blk *BlockId, p *Page) error {
 	if err != nil {
 		return errors.Wrap(err, "cannot write block "+blk.String())
 	}
-	if _, err = f.Seek(blk.Number()*fm.BlockSize(), io.SeekStart); err != nil {
+	if _, err = f.Seek(blk.Number()*int64(fm.BlockSize()), io.SeekStart); err != nil {
 		return errors.Wrap(err, "cannot write block "+blk.String())
 	}
 	if _, err = f.Write(p.contens()); err != nil {
@@ -106,7 +106,7 @@ func (fm *FileManager) Append(filename string) (*BlockId, error) {
 
 	b := make([]byte, fm.BlockSize())
 	f, err := fm.getFile(blk.filename)
-	if _, err = f.Seek(blk.Number()*fm.BlockSize(), io.SeekStart); err != nil {
+	if _, err = f.Seek(blk.Number()*int64(fm.BlockSize()), io.SeekStart); err != nil {
 		return nil, errors.Wrap(err, "cannot append block "+blk.String())
 	}
 	if _, err = f.Write(b); err != nil {
@@ -124,14 +124,14 @@ func (fm *FileManager) Length(filename string) (int64, error) {
 	if err != nil {
 		return 0, err
 	}
-	return info.Size() / fm.BlockSize(), nil
+	return info.Size() / int64(fm.BlockSize()), nil
 }
 
 func (fm *FileManager) IsNew() bool {
 	return fm.isNew
 }
 
-func (fm *FileManager) BlockSize() int64 {
+func (fm *FileManager) BlockSize() int {
 	return fm.blockSize
 }
 

@@ -14,7 +14,7 @@ type Page struct {
 }
 
 // A constructor for creating data buffers
-func NewPageByBlockSize(blockSize int64) *Page {
+func NewPageByBlockSize(blockSize int) *Page {
 	return &Page{bb: make([]byte, blockSize)}
 }
 

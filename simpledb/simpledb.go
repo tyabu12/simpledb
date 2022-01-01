@@ -4,11 +4,11 @@ import "github.com/tyabu12/simpledb/file"
 
 type SimpleDB struct {
 	filename  string
-	blockSize int64
+	blockSize int
 	fileMgr   *file.FileManager
 }
 
-func New(filename string, blockSize int64) (*SimpleDB, error) {
+func New(filename string, blockSize int) (*SimpleDB, error) {
 	fileMgr, err := file.NewFileManager(filename, blockSize)
 	if err != nil {
 		return nil, err
