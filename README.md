@@ -1,6 +1,6 @@
 # SimpleDB
 
-[![Go](https://github.com/tyabu12/simpledb/actions/workflows/go.yml/badge.svg)](https://github.com/tyabu12/simpledb/actions/workflows/go.yml)
+[![Go](https://github.com/tyabu12/simpledb/actions/workflows/main.yml/badge.svg)](https://github.com/tyabu12/simpledb/actions/workflows/main.yml)
 
 My memo for Database Design and Implementation Second Edition by Edward Sciore.
 
