@@ -31,11 +31,11 @@ func TestHashCode(t *testing.T) {
 				t.Fatalf("HashCode is failed: %v", err.Error())
 			}
 			eq := tt1.filename == tt2.filename && tt1.blknum == tt2.blknum
-			if hash1 == hash2 && !eq {
-				t.Fatalf("Expected same hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
+			if eq && hash1 != hash2 {
+				t.Fatalf("Expected same hash, but got different hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
 			}
-			if hash1 != hash2 && eq {
-				t.Fatalf("Expected different hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
+			if !eq && hash1 == hash2 {
+				t.Fatalf("Expected different hash, but got same hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
 			}
 		}
 	}
