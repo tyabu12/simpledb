@@ -6,7 +6,7 @@ import (
 )
 
 const (
-	sizeofInt64 = 8
+	SizeOfInt = 8
 )
 
 type Page struct {
@@ -24,10 +24,10 @@ func NewPageByBytes(b []byte) *Page {
 }
 
 func (p *Page) GetInt(offset int) (int, int, error) {
-	if offset+sizeofInt64 > len(p.bb) {
+	if offset+SizeOfInt > len(p.bb) {
 		return 0, 0, errors.New("out of offset")
 	}
-	return int(binary.LittleEndian.Uint64(p.bb[offset : offset+sizeofInt64])), offset + sizeofInt64, nil
+	return int(binary.LittleEndian.Uint64(p.bb[offset : offset+SizeOfInt])), offset + SizeOfInt, nil
 }
 
 func (p *Page) GetBytes(offset int) ([]byte, int, error) {
@@ -50,15 +50,15 @@ func (p *Page) GetString(offset int) (string, int, error) {
 }
 
 func (p *Page) SetInt(offset int, val int) (int, error) {
-	if offset+sizeofInt64 > len(p.bb) {
+	if offset+SizeOfInt > len(p.bb) {
 		return 0, errors.New("out of offset")
 	}
-	b := make([]byte, sizeofInt64)
+	b := make([]byte, SizeOfInt)
 	binary.LittleEndian.PutUint64(b, uint64(val))
-	for i := 0; i < sizeofInt64; i++ {
+	for i := 0; i < SizeOfInt; i++ {
 		p.bb[offset+i] = b[i]
 	}
-	return offset + sizeofInt64, nil
+	return offset + SizeOfInt, nil
 }
 
 func (p *Page) SetBytes(offset int, val []byte) (int, error) {
@@ -80,7 +80,7 @@ func (p *Page) SetString(offset int, val string) (int, error) {
 }
 
 func PageMaxLength(strlen int) int {
-	return sizeofInt64 + strlen
+	return SizeOfInt + strlen
 }
 
 func (p *Page) contens() []byte {

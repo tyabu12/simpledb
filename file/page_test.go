@@ -26,16 +26,16 @@ func TestSetGetInt(t *testing.T) {
 		if err != nil {
 			t.Fatalf("SetInt is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64 {
-			t.Fatalf("offset of SetInt is invalid, expected=%v, got=%v", tt.offset+sizeofInt64, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt {
+			t.Fatalf("offset of SetInt is invalid, expected=%v, got=%v", tt.offset+SizeOfInt, nextOffset)
 		}
 
 		val, nextOffset, err := p.GetInt(tt.offset)
 		if err != nil {
 			t.Fatalf("GetInt is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64 {
-			t.Fatalf("offset of GetInt is invalid, expected=%v, got=%v", tt.offset+sizeofInt64, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt {
+			t.Fatalf("offset of GetInt is invalid, expected=%v, got=%v", tt.offset+SizeOfInt, nextOffset)
 		}
 		if val != tt.val {
 			t.Fatalf("value of GetInt is invalid, expected=%v, got=%v", tt.val, val)
@@ -64,16 +64,16 @@ func TestSetGetBytes(t *testing.T) {
 		if err != nil {
 			t.Fatalf("SetBytes is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64+sizeofBytes {
-			t.Fatalf("offset of SetBytes is invalid, expected=%v, got=%v", tt.offset+sizeofInt64+sizeofBytes, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt+sizeofBytes {
+			t.Fatalf("offset of SetBytes is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofBytes, nextOffset)
 		}
 
 		val, nextOffset, err := p.GetBytes(tt.offset)
 		if err != nil {
 			t.Fatalf("GetInt is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64+sizeofBytes {
-			t.Fatalf("offset of GetBytes is invalid, expected=%v, got=%v", tt.offset+sizeofInt64+sizeofBytes, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt+sizeofBytes {
+			t.Fatalf("offset of GetBytes is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofBytes, nextOffset)
 		}
 		if bytes.Compare(val, tt.val) != 0 {
 			t.Fatalf("value of GetBytes is invalid, expected=%v, got=%v", tt.val, val)
@@ -101,16 +101,16 @@ func TestSetGetString(t *testing.T) {
 		if err != nil {
 			t.Fatalf("SetString is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64+sizeofString {
-			t.Fatalf("offset of SetString is invalid, expected=%v, got=%v", tt.offset+sizeofInt64+sizeofString, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt+sizeofString {
+			t.Fatalf("offset of SetString is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofString, nextOffset)
 		}
 
 		val, nextOffset, err := p.GetString(tt.offset)
 		if err != nil {
 			t.Fatalf("GetInt is failed: %s", err.Error())
 		}
-		if nextOffset != tt.offset+sizeofInt64+sizeofString {
-			t.Fatalf("offset of GetString is invalid, expected=%v, got=%v", tt.offset+sizeofInt64+sizeofString, nextOffset)
+		if nextOffset != tt.offset+SizeOfInt+sizeofString {
+			t.Fatalf("offset of GetString is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofString, nextOffset)
 		}
 		if val != tt.val {
 			t.Fatalf("value of GetString is invalid, expected=%v, got=%v", tt.val, val)
