@@ -32,10 +32,10 @@ func TestHashCode(t *testing.T) {
 			}
 			eq := tt1.filename == tt2.filename && tt1.blknum == tt2.blknum
 			if eq && hash1 != hash2 {
-				t.Fatalf("Expected same hash, but got different hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
+				t.Fatalf("Expected same hash, but got different hash! block1=%v, block2=%v", blk1.String(), blk2.String())
 			}
 			if !eq && hash1 == hash2 {
-				t.Fatalf("Expected different hash, but got same hash! tt1=%v, tt2=%v", blk1.String(), blk2.String())
+				t.Fatalf("Expected different hash, but got same hash! block1=%v, block2=%v", blk1.String(), blk2.String())
 			}
 		}
 	}
