@@ -4,48 +4,74 @@ import (
 	"fmt"
 
 	"github.com/tyabu12/simpledb/file"
+	"github.com/tyabu12/simpledb/log"
 	"github.com/tyabu12/simpledb/simpledb"
 )
 
 func main() {
-	db, err := simpledb.New("filetest", 400)
-	if err != nil {
-		panic(err)
-	}
-	fm := db.FileMgr()
-
-	blk, err := fm.Append("tempTest")
+	db, err := simpledb.New("test", 400)
 	if err != nil {
 		panic(err)
 	}
 
-	p1 := file.NewPageByBlockSize(fm.BlockSize())
-	pos1 := 88
-	s := "abcdefghijklm"
-	if _, err := p1.SetString(pos1, s); err != nil {
-		panic(err)
-	}
-	size := file.PageMaxLength(len(s))
-	pos2 := pos1 + size
-	if _, err := p1.SetInt(pos2, 345); err != nil {
-		panic(err)
-	}
-	if err := fm.Write(blk, p1); err != nil {
+	logMgr := db.LogMgr()
+	createLogRecords(logMgr, 1, 35)
+	printLogRecords(logMgr, "The log file now has these records:")
+	createLogRecords(logMgr, 36, 70)
+	logMgr.Flush(65)
+	printLogRecords(logMgr, "The log file now has these records:")
+}
+
+func printLogRecords(logMgr *log.Manager, msg string) {
+	fmt.Println(msg)
+
+	it, err := logMgr.Iterator()
+	if err != nil {
 		panic(err)
 	}
 
-	p2 := file.NewPageByBlockSize(fm.BlockSize())
-	if err := fm.Read(blk, p2); err != nil {
+	for it.HasNext() {
+		rec, err := it.Next()
+		if err != nil {
+			panic(err)
+		}
+		page := file.NewPageByBytes(rec)
+		s, _, err := page.GetString(0)
+		if err != nil {
+			panic(err)
+		}
+		nPos := file.PageMaxLength(len(s))
+		val, _, err := page.GetInt(nPos)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("[%s, %v]\n", s, val)
+	}
+	fmt.Println()
+}
+
+func createLogRecords(logMgr *log.Manager, start int, end int) {
+	fmt.Print("Creating records: ")
+	for i := start; i <= end; i++ {
+		rec := createLogRecord(logMgr, fmt.Sprintf("record%d", i), i+100)
+		lsn, err := logMgr.Append(rec)
+		if err != nil {
+			panic(err)
+		}
+		fmt.Printf("%v ", lsn)
+	}
+	fmt.Println()
+}
+
+func createLogRecord(logMgr *log.Manager, s string, n int) []byte {
+	nPos := file.PageMaxLength(len(s))
+	b := make([]byte, nPos+file.SizeOfInt)
+	page := file.NewPageByBytes(b)
+	if _, err := page.SetString(0, s); err != nil {
 		panic(err)
 	}
-	val2, _, err := p2.GetInt(pos2)
-	if err != nil {
+	if _, err := page.SetInt(nPos, n); err != nil {
 		panic(err)
 	}
-	fmt.Printf("offset %v contains %v\n", pos2, val2)
-	val1, _, err := p2.GetString(pos1)
-	if err != nil {
-		panic(err)
-	}
-	fmt.Printf("offset %v contains %v\n", pos1, val1)
+	return b
 }
