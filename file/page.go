@@ -24,7 +24,7 @@ func NewPageByBytes(b []byte) *Page {
 }
 
 func (p *Page) GetInt(offset int) (int, int, error) {
-	if offset+sizeofInt64 >= len(p.bb) {
+	if offset+sizeofInt64 > len(p.bb) {
 		return 0, 0, errors.New("out of offset")
 	}
 	return int(binary.LittleEndian.Uint64(p.bb[offset : offset+sizeofInt64])), offset + sizeofInt64, nil
@@ -33,10 +33,10 @@ func (p *Page) GetInt(offset int) (int, int, error) {
 func (p *Page) GetBytes(offset int) ([]byte, int, error) {
 	length, offset, err := p.GetInt(offset)
 	if err != nil {
-		return []byte{}, 0, err
+		return nil, 0, err
 	}
-	if offset >= len(p.bb) {
-		return []byte{}, 0, errors.New("out of offset")
+	if offset > len(p.bb) {
+		return nil, 0, errors.New("out of offset")
 	}
 	return p.bb[offset : offset+int(length)], offset + int(length), nil
 }
@@ -50,7 +50,7 @@ func (p *Page) GetString(offset int) (string, int, error) {
 }
 
 func (p *Page) SetInt(offset int, val int) (int, error) {
-	if offset+sizeofInt64 >= len(p.bb) {
+	if offset+sizeofInt64 > len(p.bb) {
 		return 0, errors.New("out of offset")
 	}
 	b := make([]byte, sizeofInt64)
@@ -66,7 +66,7 @@ func (p *Page) SetBytes(offset int, val []byte) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	if offset+len(val) >= len(p.bb) {
+	if offset+len(val) > len(p.bb) {
 		return 0, errors.New("out of page")
 	}
 	for i, v := range val {
@@ -79,7 +79,7 @@ func (p *Page) SetString(offset int, val string) (int, error) {
 	return p.SetBytes(offset, []byte(val))
 }
 
-func (p *Page) MaxLength(strlen int) int {
+func PageMaxLength(strlen int) int {
 	return sizeofInt64 + strlen
 }
 

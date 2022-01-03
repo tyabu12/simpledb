@@ -25,7 +25,7 @@ func main() {
 	if _, err := p1.SetString(pos1, s); err != nil {
 		panic(err)
 	}
-	size := p1.MaxLength(len(s))
+	size := file.PageMaxLength(len(s))
 	pos2 := pos1 + size
 	if _, err := p1.SetInt(pos2, 345); err != nil {
 		panic(err)

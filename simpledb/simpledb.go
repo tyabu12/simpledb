@@ -5,11 +5,11 @@ import "github.com/tyabu12/simpledb/file"
 type SimpleDB struct {
 	filename  string
 	blockSize int
-	fileMgr   *file.FileManager
+	fileMgr   *file.Manager
 }
 
 func New(filename string, blockSize int) (*SimpleDB, error) {
-	fileMgr, err := file.NewFileManager(filename, blockSize)
+	fileMgr, err := file.NewManager(filename, blockSize)
 	if err != nil {
 		return nil, err
 	}
@@ -20,6 +20,6 @@ func New(filename string, blockSize int) (*SimpleDB, error) {
 	}, nil
 }
 
-func (db *SimpleDB) FileMgr() *file.FileManager {
+func (db *SimpleDB) FileMgr() *file.Manager {
 	return db.fileMgr
 }

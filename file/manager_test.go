@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-func TestFileManager(t *testing.T) {
+func TestManager(t *testing.T) {
 	tests := []struct {
 		stringVal   string
 		intVal      int
@@ -18,9 +18,9 @@ func TestFileManager(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		fileMgr, err := NewFileManager("filetest", 400)
+		fileMgr, err := NewManager("filetest", 400)
 		if err != nil {
-			t.Fatalf("NewFileManager is failed: %v", err.Error())
+			t.Fatalf("NewManager is failed: %v", err.Error())
 		}
 
 		blk, err := fileMgr.Append("tempTest")
@@ -33,7 +33,7 @@ func TestFileManager(t *testing.T) {
 		if _, err := p1.SetString(pos1, tt.stringVal); err != nil {
 			t.Fatalf("SetString to page1 is failed: %v", err.Error())
 		}
-		size := p1.MaxLength(len(tt.stringVal))
+		size := PageMaxLength(len(tt.stringVal))
 		pos2 := pos1 + size
 		if _, err := p1.SetInt(pos2, tt.intVal); err != nil {
 			t.Fatalf("SetInt to page1 is failed: %v", err.Error())
