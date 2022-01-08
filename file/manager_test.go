@@ -18,7 +18,7 @@ func TestManager(t *testing.T) {
 	}
 
 	for _, tt := range tests {
-		fileMgr, err := NewManager("test", 400)
+		fileMgr, err := NewManager(t.TempDir(), 400)
 		if err != nil {
 			t.Fatalf("NewManager is failed: %v", err.Error())
 		}
