@@ -9,7 +9,6 @@ type Iterator struct {
 	blk        *file.BlockId
 	page       *file.Page
 	currentPos int
-	boundary   int
 }
 
 func NewIterator(fileMgr *file.Manager, blk *file.BlockId) (*Iterator, error) {
@@ -50,10 +49,9 @@ func (it *Iterator) moveToBlock(blk *file.BlockId) error {
 	if err != nil {
 		return err
 	}
-	it.boundary, _, err = it.page.GetInt(0)
+	it.currentPos, _, err = it.page.GetInt(0)
 	if err != nil {
 		return err
 	}
-	it.currentPos = it.boundary
 	return nil
 }
