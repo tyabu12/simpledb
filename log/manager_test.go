@@ -11,9 +11,10 @@ func TestManager(t *testing.T) {
 		texts []string
 	}{
 		{texts: []string{"abc123", "lorem ipsum", "jfeiajifao", "fejaiof"}},
+		{texts: []string{"abc123", "lorem ipsum", "jfeiajifao", "fejaiof", "jfioeajifoajoifejajfeoaj awjeofajfj fjaofjeaojf", "439892u98u9afjaoa jaj1joajwaij"}},
 	}
 
-	fileMgr, err := file.NewManager(t.TempDir(), 400)
+	fileMgr, err := file.NewManager(t.TempDir(), 100)
 	if err != nil {
 		t.Fatalf("new FileManager is failed: " + err.Error())
 	}
