@@ -117,7 +117,12 @@ func (mgr *Manager) appendNewBlock() (*file.BlockId, error) {
 }
 
 func (mgr *Manager) flush() error {
-	return mgr.fileMgr.Write(mgr.currentBlk, mgr.logPage)
+	err := mgr.fileMgr.Write(mgr.currentBlk, mgr.logPage)
+	if err != nil {
+		return err
+	}
+	mgr.lastSavedLSN = mgr.latestLSN
+	return nil
 }
 
 func (mgr *Manager) lock() {
