@@ -33,12 +33,11 @@ func (it *Iterator) Next() ([]byte, error) {
 			return nil, err
 		}
 	}
-	var rec []byte
-	var err error
-	rec, it.currentPos, err = it.page.GetBytes(it.currentPos)
+	rec, offset, err := it.page.GetBytes(it.currentPos)
 	if err != nil {
 		return nil, err
 	}
+	it.currentPos = offset
 	return rec, nil
 }
 

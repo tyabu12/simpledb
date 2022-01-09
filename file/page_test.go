@@ -24,7 +24,7 @@ func TestSetGetInt(t *testing.T) {
 
 		nextOffset, err := p.SetInt(tt.offset, tt.val)
 		if err != nil {
-			t.Fatalf("SetInt is failed: %s", err.Error())
+			t.Fatal("SetInt is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt {
 			t.Fatalf("offset of SetInt is invalid, expected=%v, got=%v", tt.offset+SizeOfInt, nextOffset)
@@ -32,7 +32,7 @@ func TestSetGetInt(t *testing.T) {
 
 		val, nextOffset, err := p.GetInt(tt.offset)
 		if err != nil {
-			t.Fatalf("GetInt is failed: %s", err.Error())
+			t.Fatal("GetInt is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt {
 			t.Fatalf("offset of GetInt is invalid, expected=%v, got=%v", tt.offset+SizeOfInt, nextOffset)
@@ -62,7 +62,7 @@ func TestSetGetBytes(t *testing.T) {
 
 		nextOffset, err := p.SetBytes(tt.offset, tt.val)
 		if err != nil {
-			t.Fatalf("SetBytes is failed: %s", err.Error())
+			t.Fatal("SetBytes is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt+sizeofBytes {
 			t.Fatalf("offset of SetBytes is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofBytes, nextOffset)
@@ -70,7 +70,7 @@ func TestSetGetBytes(t *testing.T) {
 
 		val, nextOffset, err := p.GetBytes(tt.offset)
 		if err != nil {
-			t.Fatalf("GetInt is failed: %s", err.Error())
+			t.Fatal("GetInt is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt+sizeofBytes {
 			t.Fatalf("offset of GetBytes is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofBytes, nextOffset)
@@ -99,7 +99,7 @@ func TestSetGetString(t *testing.T) {
 
 		nextOffset, err := p.SetString(tt.offset, tt.val)
 		if err != nil {
-			t.Fatalf("SetString is failed: %s", err.Error())
+			t.Fatal("SetString is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt+sizeofString {
 			t.Fatalf("offset of SetString is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofString, nextOffset)
@@ -107,7 +107,7 @@ func TestSetGetString(t *testing.T) {
 
 		val, nextOffset, err := p.GetString(tt.offset)
 		if err != nil {
-			t.Fatalf("GetInt is failed: %s", err.Error())
+			t.Fatal("GetInt is failed: " + err.Error())
 		}
 		if nextOffset != tt.offset+SizeOfInt+sizeofString {
 			t.Fatalf("offset of GetString is invalid, expected=%v, got=%v", tt.offset+SizeOfInt+sizeofString, nextOffset)

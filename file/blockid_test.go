@@ -22,13 +22,13 @@ func TestHashCode(t *testing.T) {
 		blk1 := NewBlockId(tt1.filename, tt1.blknum)
 		hash1, err := blk1.HashCode()
 		if err != nil {
-			t.Fatalf("HashCode is failed: %v", err.Error())
+			t.Fatal("HashCode is failed: " + err.Error())
 		}
 		for _, tt2 := range tests {
 			blk2 := NewBlockId(tt2.filename, tt2.blknum)
 			hash2, err := blk2.HashCode()
 			if err != nil {
-				t.Fatalf("HashCode is failed: %v", err.Error())
+				t.Fatal("HashCode is failed: " + err.Error())
 			}
 			eq := tt1.filename == tt2.filename && tt1.blknum == tt2.blknum
 			if eq && hash1 != hash2 {

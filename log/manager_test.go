@@ -14,13 +14,13 @@ func TestManager(t *testing.T) {
 		{texts: []string{"abc123", "lorem ipsum", "jfeiajifao", "fejaiof", "jfioeajifoajoifejajfeoaj awjeofajfj fjaofjeaojf", "439892u98u9afjaoa jaj1joajwaij"}},
 	}
 
-	fileMgr, err := file.NewManager(t.TempDir(), 100)
+	fileMgr, err := file.NewManager(t.TempDir(), 71)
 	if err != nil {
-		t.Fatalf("new FileManager is failed: " + err.Error())
+		t.Fatal("new FileManager is failed: " + err.Error())
 	}
 	logMgr, err := NewManager(fileMgr, "temp.log")
 	if err != nil {
-		t.Fatalf("new LogManager is failed: " + err.Error())
+		t.Fatal("new LogManager is failed: " + err.Error())
 	}
 
 	for _, tt := range tests {
@@ -33,22 +33,21 @@ func TestManager(t *testing.T) {
 func checkLogRecords(t *testing.T, logMgr *Manager, expectedTexts []string) {
 	it, err := logMgr.Iterator()
 	if err != nil {
-		t.Fatalf("LogManager.Iterator is failed: %s", err.Error())
+		t.Fatal("LogManager.Iterator is failed: " + err.Error())
 	}
 	for i := len(expectedTexts) - 1; i >= 0; i-- {
 		expected := expectedTexts[i]
 		if !it.HasNext() {
-			t.Fatalf("HasNext is expected true")
+			t.Fatal("HasNext is expected true")
 		}
 		rec, err := it.Next()
 		if err != nil {
-			t.Fatalf("Next is failed: %s", err.Error())
+			t.Fatal("Next is failed: " + err.Error())
 		}
 		page := file.NewPageByBytes(rec)
-		var text string
-		text, _, err = page.GetString(0)
+		text, _, err := page.GetString(0)
 		if err != nil {
-			t.Fatalf("page.GetString(0) is failed: %s", err.Error())
+			t.Fatal("page.GetString(0) is failed: " + err.Error())
 		}
 		if text != expected {
 			t.Fatalf("expected=%v, actual=%v", expected, text)
@@ -61,10 +60,10 @@ func createLogRecord(t *testing.T, logMgr *Manager, texts []string) {
 		rec := make([]byte, file.PageMaxLength(len(text)))
 		page := file.NewPageByBytes(rec)
 		if _, err := page.SetString(0, text); err != nil {
-			t.Fatalf("page.SetString(0) is failed: %s", err.Error())
+			t.Fatal("page.SetString(0) is failed: " + err.Error())
 		}
 		if _, err := logMgr.Append(rec); err != nil {
-			t.Fatalf("LogManager.Append is failed: %s" + err.Error())
+			t.Fatal("LogManager.Append is failed: " + err.Error())
 		}
 	}
 }

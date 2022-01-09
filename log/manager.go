@@ -1,6 +1,8 @@
 package log
 
 import (
+	"errors"
+	"fmt"
 	"sync"
 
 	"github.com/tyabu12/simpledb/file"
@@ -75,7 +77,8 @@ func (mgr *Manager) Append(logRec []byte) (int, error) {
 	recSize := len(logRec)
 	bytesNeeded := recSize + file.SizeOfInt
 
-	if boundary-bytesNeeded < file.SizeOfInt {
+	recPos := boundary - bytesNeeded
+	if recPos < file.SizeOfInt {
 		if err := mgr.flush(); err != nil {
 			return 0, err
 		}
@@ -87,9 +90,11 @@ func (mgr *Manager) Append(logRec []byte) (int, error) {
 		if err != nil {
 			return 0, err
 		}
+		recPos = boundary - bytesNeeded
+		if recPos < file.SizeOfInt {
+			return 0, errors.New(fmt.Sprintf("bytes of BlockSize=%v is too small for bytes of log record = %v", mgr.fileMgr.BlockSize(), bytesNeeded))
+		}
 	}
-
-	recPos := boundary - bytesNeeded
 	if _, err := mgr.logPage.SetBytes(recPos, logRec); err != nil {
 		return 0, err
 	}

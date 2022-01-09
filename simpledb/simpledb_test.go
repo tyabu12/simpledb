@@ -5,12 +5,12 @@ import "testing"
 func TestNewSimpleDB(t *testing.T) {
 	db, err := New(t.TempDir(), 400)
 	if err != nil {
-		t.Fatalf("SimpleDB.New is failed: " + err.Error())
+		t.Fatal("SimpleDB.New is failed: " + err.Error())
 	}
 	if db.FileMgr() == nil {
-		t.Fatalf("FileMgr() is nil")
+		t.Fatal("FileMgr() is nil")
 	}
 	if db.LogMgr() == nil {
-		t.Fatalf("LogMgr() is nil")
+		t.Fatal("LogMgr() is nil")
 	}
 }
