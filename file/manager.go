@@ -1,13 +1,12 @@
 package file
 
 import (
+	"fmt"
 	"io"
 	"os"
 	"path/filepath"
 	"strings"
 	"sync"
-
-	"github.com/pkg/errors"
 )
 
 type Manager struct {
@@ -45,7 +44,7 @@ func fileExists(name string) bool {
 func removeTemporaryTables(dbDirectory string) error {
 	return filepath.WalkDir(dbDirectory, func(path string, entry os.DirEntry, err error) error {
 		if err != nil {
-			return errors.Wrap(err, "failed filepath.WalkDir")
+			return fmt.Errorf("failed filepath.WalkDir: %w", err)
 		}
 		if entry.IsDir() {
 			return nil
@@ -66,13 +65,13 @@ func (mgr *Manager) Read(blk *BlockId, p *Page) error {
 
 	f, err := mgr.getFile(blk.filename)
 	if err != nil {
-		return errors.Wrap(err, "cannot read block "+blk.String())
+		return fmt.Errorf("cannot read block %s: %w", blk.String(), err)
 	}
 	if _, err = f.Seek(blk.Number()*int64(mgr.BlockSize()), io.SeekStart); err != nil {
-		return errors.Wrap(err, "cannot read block "+blk.String())
+		return fmt.Errorf("cannot read block %s: %w", blk.String(), err)
 	}
 	if _, err = f.Read(p.contens()); err != nil {
-		return errors.Wrap(err, "cannot read block "+blk.String())
+		return fmt.Errorf("cannot read block %s: %w", blk.String(), err)
 	}
 	return nil
 }
@@ -83,13 +82,13 @@ func (mgr *Manager) Write(blk *BlockId, p *Page) error {
 
 	f, err := mgr.getFile(blk.filename)
 	if err != nil {
-		return errors.Wrap(err, "cannot write block "+blk.String())
+		return fmt.Errorf("cannot write block %s: %w", blk.String(), err)
 	}
 	if _, err = f.Seek(blk.Number()*int64(mgr.BlockSize()), io.SeekStart); err != nil {
-		return errors.Wrap(err, "cannot write block "+blk.String())
+		return fmt.Errorf("cannot write block %s: %w", blk.String(), err)
 	}
 	if _, err = f.Write(p.contens()); err != nil {
-		return errors.Wrap(err, "cannot write block "+blk.String())
+		return fmt.Errorf("cannot write block %s: %w", blk.String(), err)
 	}
 	return nil
 }
@@ -100,17 +99,17 @@ func (mgr *Manager) Append(filename string) (*BlockId, error) {
 
 	newBlockNum, err := mgr.Length(filename)
 	if err != nil {
-		return nil, errors.Wrap(err, "cannot append block")
+		return nil, fmt.Errorf("cannot append block: %w", err)
 	}
 	blk := NewBlockId(filename, newBlockNum)
 
 	b := make([]byte, mgr.BlockSize())
 	f, err := mgr.getFile(blk.filename)
 	if _, err = f.Seek(blk.Number()*int64(mgr.BlockSize()), io.SeekStart); err != nil {
-		return nil, errors.Wrap(err, "cannot append block "+blk.String())
+		return nil, fmt.Errorf("cannot append block %s: %w", blk.String(), err)
 	}
 	if _, err = f.Write(b); err != nil {
-		return nil, errors.Wrap(err, "cannot append block "+blk.String())
+		return nil, fmt.Errorf("cannot append block %s: %w", blk.String(), err)
 	}
 	return blk, nil
 }
@@ -142,7 +141,7 @@ func (mgr *Manager) getFile(filename string) (*os.File, error) {
 		name := filepath.Join(mgr.dbDirectory, filename)
 		f, err = os.OpenFile(name, os.O_RDWR|os.O_CREATE, 0666)
 		if err != nil {
-			return nil, errors.Wrap(err, "cannot open file: "+filename)
+			return nil, fmt.Errorf("cannot open file %s: %w", filename, err)
 		}
 		mgr.openFiles[filename] = f
 	}
