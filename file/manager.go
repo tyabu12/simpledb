@@ -70,8 +70,12 @@ func (mgr *Manager) Read(blk *BlockId, p *Page) error {
 	if _, err = f.Seek(blk.Number()*int64(mgr.BlockSize()), io.SeekStart); err != nil {
 		return fmt.Errorf("cannot read block %s: %w", blk.String(), err)
 	}
-	if _, err = f.Read(p.contens()); err != nil {
+	readBytes, err := f.Read(p.contens())
+	if err != nil && err != io.EOF {
 		return fmt.Errorf("cannot read block %s: %w", blk.String(), err)
+	}
+	for i := readBytes; i < len(p.contens()); i++ {
+		p.contens()[i] = 0
 	}
 	return nil
 }
