@@ -50,6 +50,7 @@ func (mgr *Manager) Pin(blk *file.BlockId) (*Buffer, error) {
 		if err != nil {
 			return nil, err
 		}
+		// TODO: タイムアウト未対応
 		mgr.cond.Wait()
 		if mgr.waitingTooLong(startTime) {
 			return nil, ErrNoAvailableBuffer
