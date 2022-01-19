@@ -41,20 +41,20 @@ func (mgr *Manager) Pin(blk *file.BlockId) (*Buffer, error) {
 	mgr.lock()
 	defer mgr.unlock()
 
-	var buff *Buffer = nil
 	startTime := time.Now()
-	for buff == nil {
-		var err error
-		buff, err = mgr.tryToPin(blk)
+	for {
+		buff, err := mgr.tryToPin(blk)
+		if buff != nil {
+			return buff, nil
+		}
 		if err != nil {
 			return nil, err
 		}
+		mgr.cond.Wait()
 		if mgr.waitingTooLong(startTime) {
 			return nil, ErrNoAvailableBuffer
 		}
-		// mgr.cond.Wait()
 	}
-	return buff, nil
 }
 
 func (mgr *Manager) Unpin(buff *Buffer) error {
